@@ -1,11 +1,9 @@
-//* * импортируем модель пользователя */
 const User = require("../models/user");
 
 const ERROR_BAD_REQUEST = 400;
 const ERROR_NOT_FOUND = 404;
 const ERROR_DEFAULT = 500;
 
-//* * сработает при GET-запросе на URL /users */
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
@@ -14,9 +12,8 @@ const getUsers = (req, res) => {
     );
 };
 
-//* * GET-запрос на URL /users/:id */
 const getUserById = (req, res) => {
-  const { id } = req.params; // доступ к значениям параметров, переданным в URL
+  const { id } = req.params;
 
   User.findById(id)
     .then((user) => {
@@ -39,7 +36,6 @@ const getUserById = (req, res) => {
     });
 };
 
-//* * POST-запрос на URL /users */
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
@@ -58,7 +54,6 @@ const createUser = (req, res) => {
     });
 };
 
-//* * логика для обновления данных пользователя */
 const updateUserFields = (req, res, updateFields) => {
   User.findByIdAndUpdate(req.user._id, updateFields, {
     new: true,
@@ -78,16 +73,14 @@ const updateUserFields = (req, res, updateFields) => {
     });
 };
 
-//* * PATCH-запрос на URL /users/me */
-const updateUser = (req, res) => {
-  const { name, about } = req.body;
-  updateUserFields(req, res, { name, about });
-};
-
-//* * PATCH-запрос на URL /users/me/avatar */
 const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   updateUserFields(req, res, { avatar });
+};
+
+const updateUser = (req, res) => {
+  const { name, about } = req.body;
+  updateUserFields(req, res, { name, about });
 };
 
 module.exports = {

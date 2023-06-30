@@ -5,6 +5,8 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const router = require('./routes/index');
 
+const invalidRoutes = require('./routes/invalidURLs');
+
 app.listen(PORT, () => console.log(`Подключение к MongoDB: ${PORT}`));
 
 mongoose
@@ -22,6 +24,4 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.use('/', router);
-app.use('/', (req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
-});
+app.use('*', invalidRoutes);

@@ -3,6 +3,7 @@ const Card = require('../models/card');
 const ERROR_BAD_REQUEST = 400;
 const ERROR_NOT_FOUND = 404;
 const ERROR_DEFAULT = 500;
+const SUCCESS_CREATED_CODE = 201;
 
 const getCards = (req, res) => {
   Card.find({})
@@ -15,7 +16,7 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: _id })
-    .then((card) => res.status(201).send(card))
+    .then((card) => res.status(SUCCESS_CREATED_CODE).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
@@ -57,7 +58,6 @@ const putCardLike = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     {
       new: true,
-      runValidators: true,
     },
   )
     .then((card) => {
@@ -84,7 +84,6 @@ const deleteCardLike = (req, res) => {
     { $pull: { likes: req.user._id } },
     {
       new: true,
-      runValidators: true,
     },
   )
     .then((card) => {

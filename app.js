@@ -1,27 +1,31 @@
 const express = require('express');
-const mongoose = require('mongoose');
-
-const { PORT = 3000 } = process.env;
-const app = express();
-const router = require('./routes/index');
-
+const bodyParser = require('body-parser');
+const moongose = require('mongoose');
+const { errors } = require('celebrate');
+const userRoute = require('./routes/userRoutes');
+const cardRoute = require('./routes/cardRoutes');
 const invalidRoutes = require('./routes/invalidURLs');
+const auth = require('./middlewares/auth');
+const { login, createUser } = require('./controllers/auth');
+const { validateLogin, validateRegister } = require('./utils/validators/userValidator');
+const errorsHandler = require('./middlewares/errorHandler');
 
-app.listen(PORT, () => console.log(`Подключение к MongoDB: ${PORT}`));
+const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+const app = express();
+app.use(bodyParser.json());
+moongose.connect(DB_URL);
 
-mongoose
-  .connect('mongodb://127.0.0.1:27017/mestodb')
-  .then(() => console.log('Подключено к MongoDB'))
-  .catch((err) => {
-    console.error('Ошибка подключения к MongoDB:', err);
-  });
+app.post('/signin', validateLogin, login);
+app.post('/signup', validateRegister, createUser);
 
-app.use((req, res, next) => {
-  req.user = { _id: '649ea24e5aae2626b3fa0903' };
+app.use(auth);
+app.use('/users', userRoute);
+app.use('/cards', cardRoute);
 
-  next();
-});
-
-app.use(express.json());
-app.use('/', router);
 app.use('*', invalidRoutes);
+app.use(errors());
+app.use(errorsHandler);
+
+app.listen(PORT, () => {
+  console.log('server start');
+});

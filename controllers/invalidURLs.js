@@ -1,7 +1,7 @@
-const ERROR_NOT_FOUND = 404;
+const NotFoundError = require('../utils/errors/NotFoundError');
 
-function getInvalidURL(req, res) {
-  res.status(ERROR_NOT_FOUND).send({ message: 'Такой страницы не существует' });
+function getInvalidURL() {
+  throw new NotFoundError({ message: 'Такой страницы не существует' });
 }
 
 module.exports = { getInvalidURL };

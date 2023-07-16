@@ -1,7 +1,5 @@
 const User = require('../models/user');
-const {
-  NOT_FOUND_ERROR_CODE,
-} = require('../utils/constants');
+const { NOT_FOUND_ERROR_CODE } = require('../utils/constants');
 const BadRequestError = require('../utils/errors/BadRequestError');
 
 const getUser = (req, res, next) => {

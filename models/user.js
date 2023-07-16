@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const validator = require('validator');
-
+const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../utils/errors/UnauthorizedError');
 
 const userSchema = new mongoose.Schema({
@@ -22,7 +21,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: (v) => validator.isURL(v, { protocols: ['http', 'https'], require_protocol: true }),
-      message: ({ value }) => `${value} - некоректный адрес URL.`,
+      message: ({ value }) => `${value} - некоректный адрес URL. Ожидается адрес в формате: http(s)://(www).site.com`,
     },
   },
   email: {

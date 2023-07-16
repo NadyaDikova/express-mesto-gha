@@ -7,6 +7,7 @@ const { validateUserId, validateUserInfo, validateAvatar } = require('../utils/v
 userRoute.get('/', getAllUsers);
 userRoute.get('/me', getMe);
 userRoute.get('/:id', validateUserId, getUser);
+
 userRoute.patch('/me', validateUserInfo, updateProfile);
 userRoute.patch('/me/avatar', validateAvatar, updateAvatar);
 

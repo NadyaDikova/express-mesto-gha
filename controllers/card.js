@@ -29,13 +29,13 @@ const deleteCard = (req, res, next) => {
       if (!card.owner.equals(req.user._id)) {
         return next(new ForbiddenError('Нельзя удалять чужие карточки'));
       }
-      Card.deleteOne(card)
+      return Card.deleteOne(card)
         .then(() => {
           res.send({ message: 'Карточка удалена' });
         });
     })
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError('Переданы не валидные данные'));
       } else {
         next(err);

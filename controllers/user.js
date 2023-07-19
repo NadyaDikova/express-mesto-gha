@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const { NOT_FOUND_ERROR_CODE } = require('../utils/constants');
+const { NotFoundError } = require('../utils/errors/NotFoundError');
 const BadRequestError = require('../utils/errors/BadRequestError');
 
 const getUser = (req, res, next) => {
@@ -7,10 +7,9 @@ const getUser = (req, res, next) => {
   User.findById(id)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Пользователь не найден' });
-      } else {
-        res.send(user);
+        return next(new NotFoundError('Пользователь не найден'));
       }
+      return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
